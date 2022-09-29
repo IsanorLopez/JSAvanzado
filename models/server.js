@@ -6,7 +6,18 @@ class Server {
         this.app  = express();
         this.port = process.env.PORT;
 
+        this.middlewares();
+
         this.listen();
+    }
+
+    middlewares() {
+
+        // Lectura y parseo del body en una peticion
+        this.app.use( express.json() );
+
+        //Directorio publico
+        this.app.use( express.static('public') );
     }
 
     listen() {
