@@ -4,8 +4,6 @@ const axios = require('axios')
 const usuariosGet = function (req, res = response) {
     res.json({
         msg: 'Get Api controller',
-        nombre,
-        edad
     });
 }
 

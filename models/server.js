@@ -8,7 +8,13 @@ class Server {
 
         this.middlewares();
 
+        this.routes();
+
         this.listen();
+    }
+
+    routes() {
+        this.app.use('/api/usuarios', require('../routes/usuarios.routes'));
     }
 
     middlewares() {
