@@ -1,5 +1,8 @@
+const bcrypt = require('bcryptjs');
 const { request, response } = require('express');
-const axios = require('axios')
+const { validationResult } = require('express-validator');
+
+const Usuario = require('../models/usuario');
 
 const usuariosGet = function (req, res = response) {
     res.json({
@@ -7,14 +10,34 @@ const usuariosGet = function (req, res = response) {
     });
 }
 
-const usuariosPost = function (req = request, res = response) {
+const usuariosPost =  async (req = request, res = response) => {
     
-    const {nombre, edad} = req.body;
+    const {nombre, correo, password} = req.body;
+    const usuario = new Usuario( { nombre, correo } );
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(errors)
+    }
+
+    //Verificar si el correo existe
+    const existeEmail = await Usuario.findOne({correo});
+    if ( existeEmail ) {
+        return res.status(400).json({
+            msg: 'El correo ya esta registrado en la BD'
+        });
+    }
+
+    //Encriptacion de contrasena
+    const salt = bcrypt.genSaltSync();
+    usuario.password = bcrypt.hashSync( password, salt);
     
-    res.json({
-        msg: 'Post Api controller',
-        nombre,
-        edad
+    //Guardado en BD
+    await usuario.save();
+    
+    res.status(201).json({
+        msg: 'Usuario dado de alta con exito',
+        usuario
     });
 }
 
