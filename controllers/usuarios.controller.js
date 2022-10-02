@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs');
 const { request, response } = require('express');
-const { validationResult } = require('express-validator');
 
 const Usuario = require('../models/usuario');
 
@@ -14,11 +13,6 @@ const usuariosPost =  async (req = request, res = response) => {
     
     const {nombre, correo, password} = req.body;
     const usuario = new Usuario( { nombre, correo } );
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json(errors)
-    }
 
     //Verificar si el correo existe
     const existeEmail = await Usuario.findOne({correo});
@@ -36,8 +30,7 @@ const usuariosPost =  async (req = request, res = response) => {
     await usuario.save();
     
     res.status(201).json({
-        msg: 'Usuario dado de alta con exito',
-        usuario
+        msg: 'Usuario dado de alta con exito'
     });
 }
 
