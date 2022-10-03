@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs');
 const { request, response } = require('express');
+
+const encriptarConstrasena = require('../helpers/encriptacionPassword.helper');
 
 const Usuario = require('../models/usuario');
 
@@ -14,19 +15,8 @@ const usuariosPost =  async (req = request, res = response) => {
     const {nombre, correo, password} = req.body;
     const usuario = new Usuario( { nombre, correo } );
 
-    //Verificar si el correo existe
-    const existeEmail = await Usuario.findOne({correo});
-    if ( existeEmail ) {
-        return res.status(400).json({
-            msg: 'El correo ya esta registrado en la BD'
-        });
-    }
-
-    //Encriptacion de contrasena
-    const salt = bcrypt.genSaltSync();
-    usuario.password = bcrypt.hashSync( password, salt);
+    usuario.password = encriptarConstrasena(password);
     
-    //Guardado en BD
     await usuario.save();
     
     res.status(201).json({
@@ -34,23 +24,30 @@ const usuariosPost =  async (req = request, res = response) => {
     });
 }
 
-const usuariosPut = function (req = request, res = response) {
+const usuariosPut = async (req = request, res = response) => {
     
     const { id } = req.params;
+    const { nombre, correo, password } = req.body;
+
+    const nuevoPassword = encriptarConstrasena(password);
+
+    await Usuario.findByIdAndUpdate(id, { nombre, correo, password: nuevoPassword });
     
-    res.json({
-        msg: 'Put Api controller',
-        id
+    res.status(201).json({
+        msg: 'Usuario actualizado con exito'
     });
 }
 
-const usuariosPatch = function (req = request, res = response) {
+const usuariosPatch = async (req = request, res = response) => {
     
     const { id } = req.params;
+
+    const { admin } = req.body;
     
-    res.json({
-        msg: 'Patch Api controller',
-        id
+    await Usuario.updateOne({ id }, { admin });
+
+    res.status(201).json({
+        msg: 'Cambio de atributo admin con exito'
     });
 }
 
