@@ -51,13 +51,14 @@ const usuariosPatch = async (req = request, res = response) => {
     });
 }
 
-const usuariosDelete = function (req = request, res = response) {
+const usuariosDelete = async (req = request, res = response) => {
 
-    const query = req.query;
+    const { id } = req.params;
 
-    res.json({
-        msg: 'Delete Api controller',
-        query
+    await Usuario.findByIdAndDelete(id);
+
+    res.status(201).json({
+        msg: 'Usuario eliminado con exito'
     });
 }
 

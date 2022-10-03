@@ -37,6 +37,10 @@ router.patch('/:id', [
     validarCampos
 ], usuariosPatch);
 
-router.delete('/:id', usuariosDelete);
+router.delete('/:id', [
+    check('id', 'El id especificado no es valido').isMongoId(),
+    check('id').custom( usuarioID ),
+    validarCampos
+], usuariosDelete);
 
 module.exports = router;
