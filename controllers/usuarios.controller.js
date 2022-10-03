@@ -8,7 +8,7 @@ const usuariosGet = async (req, res = response) => {
 
     const usuarios = await Usuario.find({});
 
-    res.status(202).json({
+    res.status(200).json({
         usuarios
     });
 }
@@ -36,7 +36,7 @@ const usuariosPut = async (req = request, res = response) => {
 
     await Usuario.findByIdAndUpdate(id, { nombre, correo, password: nuevoPassword });
     
-    res.status(201).json({
+    res.status(202).json({
         msg: 'Usuario actualizado con exito'
     });
 }
@@ -49,7 +49,7 @@ const usuariosPatch = async (req = request, res = response) => {
     
     await Usuario.updateOne({ id }, { admin });
 
-    res.status(201).json({
+    res.status(202).json({
         msg: 'Cambio de atributo admin con exito'
     });
 }
@@ -60,7 +60,7 @@ const usuariosDelete = async (req = request, res = response) => {
 
     await Usuario.findByIdAndDelete(id);
 
-    res.status(201).json({
+    res.status(200).json({
         msg: 'Usuario eliminado con exito'
     });
 }

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
+const errores = require('../helpers/errores.helper');
 const { correoDuplicado, usuarioID } = require('../helpers/validators.helper');
 const validarCampos = require('../middlewares/validarCampos.middleware');
 const { usuariosGet, 
@@ -14,32 +15,33 @@ const router = Router();
 router.get('/', usuariosGet);
 
 router.post('/', [
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('password', 'El password es obligatorio').not().isEmpty(),
-    check('correo', 'El correo es invalido').isEmail(),
-    check('correo').custom( correoDuplicado),
+    check('nombre',).not().isEmpty().withMessage(errores.nombre),
+    check('password').not().isEmpty().withMessage(errores.password),
+    check('correo').isEmail().withMessage(errores.correo),
+    check('correo').custom( correoDuplicado ).withMessage(errores.correoDuplicado),
     validarCampos
 ],usuariosPost);
 
 router.put('/:id', [
-    check('id', 'El id especificado no es valido').isMongoId(),
-    check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-    check('password', 'El password es obligatorio').not().isEmpty(),
-    check('correo', 'El correo es invalido').isEmail(),
-    check('correo').custom( correoDuplicado ),
-    check('id').custom( usuarioID ),
+    check('id').isMongoId().withMessage(errores.id),
+    check('nombre').not().isEmpty().withMessage(errores.nombre),
+    check('password').not().isEmpty().withMessage(errores.password),
+    check('correo').isEmail().withMessage(errores.correo),
+    check('id').custom( usuarioID ).withMessage(errores.idNoExiste),
     validarCampos
 ], usuariosPut);
 
 router.patch('/:id', [
-    check('admin', 'El admin es obligatorio').not().isEmpty(),
-    check('admin', 'admin es un atributo que debe ser booleano').isBoolean(),
+    check('id').isMongoId().withMessage(errores.id),
+    check('admin').not().isEmpty().withMessage(errores.admin),
+    check('admin').isBoolean().withMessage(errores.adminInvalido),
+    check('id').custom( usuarioID ).withMessage(errores.idNoExiste),
     validarCampos
 ], usuariosPatch);
 
 router.delete('/:id', [
-    check('id', 'El id especificado no es valido').isMongoId(),
-    check('id').custom( usuarioID ),
+    check('id').isMongoId().withMessage(errores.id),
+    check('id').custom( usuarioID ).withMessage(errores.idNoExiste),
     validarCampos
 ], usuariosDelete);
 

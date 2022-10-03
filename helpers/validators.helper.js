@@ -4,7 +4,7 @@ const correoDuplicado =  async (correo = '') => {
 
     const existeCorreo = await Usuario.findOne({ correo });
     if ( existeCorreo) {
-        throw new Error(`El correo ${correo} ya esta dado de alta en la BD`);   
+        throw new Error();   
     }
 
 }
@@ -13,7 +13,7 @@ const usuarioID =  async ( id ) => {
 
     const existeUsuario = await Usuario.findById( id );
     if ( !existeUsuario) {
-        throw new Error(`No existe usuario con el id ${id}`);   
+        throw new Error();   
     }
 
 }
