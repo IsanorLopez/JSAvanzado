@@ -4,9 +4,12 @@ const encriptarConstrasena = require('../helpers/encriptacionPassword.helper');
 
 const Usuario = require('../models/usuario');
 
-const usuariosGet = function (req, res = response) {
-    res.json({
-        msg: 'Get Api controller',
+const usuariosGet = async (req, res = response) => {
+
+    const usuarios = await Usuario.find({});
+
+    res.status(202).json({
+        usuarios
     });
 }
 
