@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const { dbConection } = require('../DB/config')
 
@@ -8,6 +9,8 @@ class Server {
         this.app  = express();
         this.port = process.env.PORT;
 
+        this.cors();
+
         //Conexion a BD
         this.conectarDB();
 
@@ -16,6 +19,10 @@ class Server {
         this.routes();
 
         this.listen();
+    }
+
+    cors() {
+        this.app.use(cors());
     }
 
     routes() {
